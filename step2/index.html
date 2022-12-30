@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+        <script>
+            window.addEventListener("load", init);
+            function init(){
+                const size={
+                    width:960,
+                    height:540,
+                };
+
+                // レンダラーの準備
+                const threeCanvas = document.getElementById("three-canvas");
+                const renderer = new THREE.WebGLRenderer({canvas:threeCanvas});
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(size.width, size.height);
+
+                // シーンの準備
+                const scene = new THREE.Scene();
+
+                // カメラの準備
+                const camera = new THREE.PerspectiveCamera(
+                    45,
+                    size.width / size.height
+                );
+                // 二個目のパラメーターがY座標。Yが鉛直上。
+                camera.position.set(0,1000,1000);
+                // 原点を見る。
+                camera.lookAt(new THREE.Vector3(0,0,0));
+
+                // 箱を置く。400角.
+                const geometry = new THREE.BoxGeometry(400,400,400);
+                const material = new THREE.MeshNormalMaterial();
+                const box = new THREE.Mesh(geometry,material);
+                scene.add(box);
+
+                // 間隔2000のグリッド
+                const grid = new THREE.GridHelper(2000);
+                scene.add(grid);
+                
+                // 赤緑青の座標系の線
+                const axis = new THREE.AxesHelper(500);
+                scene.add(axis);
+
+                tick();
+
+                function tick(){
+                    renderer.render(scene, camera);
+                    box.rotation.y += 0.01; //radian
+                    requestAnimationFrame(tick);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <canvas id="three-canvas"></canvas>
+    </body>
+</html>
